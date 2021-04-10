@@ -37,7 +37,8 @@ class FleetInfo():
         self.shiplist: Optional[tk.OptionMenu] = None
         self.selectedship: Optional[tk.StringVar] = None
         self.tracevar = None
-        self.shipdata: Optional[Dict[str, Dict[str, Any]]] = {"0":{"Name":"Loading","loadout":None}}
+        self.shipdata_default = {"0":{"Name":"Loading...","loadout":None}}
+        self.shipdata: Optional[Dict[str, Dict[str, Any]]] = self.shipdata_default
         self.shipnames: List = ["0: Loading..."]
         self.lastship: str = self.shipnames[0]
 
@@ -67,7 +68,7 @@ class FleetInfo():
 
     # Load in fleet data from file
     def loadshipdata(self) -> None:
-        self.shipdata = {"0":{"Name":"Loading...","loadout":None}}
+        self.shipdata = self.shipdata_default
         filename = self.filename
         if self.is_beta:
             filename = "beta-"+filename
@@ -80,7 +81,7 @@ class FleetInfo():
         except Exception as e:
             pass
         if not isinstance(self.shipdata,dict):
-            self.shipdata = {"0":{"Name":"Loading...","loadout":None}}
+            self.shipdata = self.shipdata_default
         self.updateships()
 
     # Write fleet data out to file, done every time it changes
@@ -108,8 +109,10 @@ class FleetInfo():
             n = state["ShipName"]
         elif "ShipName" in state.keys() and not n:
             n = ship_map.get(state["ShipType"], state["ShipType"])
-        self.shipdata[shipid]["Name"] = n
-        self.shipdata[shipid]["loadout"] = entry
+        self.shipdata[shipid] = {"Name": n, "loadout": entry}
+        # Cleanup the placeholder if it's still there, and we've just added a new ship.
+        if shipid != "0" and "0" in self.shipdata.keys() and self.shipdata["0"]["Name"] == self.shipdata_default["0"]["Name"]:
+            del self.shipdata["0"]
         self.updateships()
         self.saveshipdata()
 
