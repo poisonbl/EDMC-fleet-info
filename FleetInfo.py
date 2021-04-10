@@ -68,7 +68,7 @@ class FleetInfo():
 
     # Load in fleet data from file
     def loadshipdata(self) -> None:
-        self.shipdata = {0:{"Name":"Loading...","loadout":None}}
+        self.shipdata = {"0":{"Name":"Loading...","loadout":None}}
         try:
             logger.debug(f'Loading ship data from {self.filepath!r}')
             with open(self.filepath, mode='r', encoding='utf-8') as shipsfile:
@@ -77,7 +77,7 @@ class FleetInfo():
         except Exception as e:
             pass
         if not isinstance(self.shipdata,dict):
-            self.shipdata = {0:{"Name":"Loading...","loadout":None}}
+            self.shipdata = {"0":{"Name":"Loading...","loadout":None}}
         self.updateships()
 
     # Write fleet data out to file, done every time it changes
