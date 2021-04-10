@@ -4,6 +4,8 @@ This plugin for [EDMarketConnector](https://github.com/EDCD/EDMarketConnector) c
 
 Opening the shipyard will update the list of owned ships (local and remote), while loadouts only update when a loadout journal event is received (game load, exiting outfitting with changes, changing ships).
 
+To load a ship up, select it from the list, then click on "Shipyard:".
+
 Data for your fleet is stored in edmc-fleet-info-data.json inside the plugin folder (or beta-edmc-fleet-inf-data.json for testing builds of the game). It does NOT account for multiple commanders running within the same OS level user account.
 
 ## Installation
