@@ -34,7 +34,10 @@ def journal_entry(
     cmdr: str, is_beta: bool, system: str, station: str, entry: Dict[str, Any], state: Dict[str, Any]
 ) -> None:
     global fleet_info
-    fleet_info.is_beta = is_beta
+    # Account for beta any time that value changes, and switch data files
+    if fleet_info.is_beta != is_beta:
+        fleet_info.is_beta = is_beta
+        fleet_info.loadshipdata()
     if entry['event'] in set(['Loadout', 'StoredShips']):
         if entry['event'] == "StoredShips":
             fleet_info.updateshipyard(entry, state)

@@ -33,7 +33,6 @@ class FleetInfo():
         self.is_beta: bool = False
         self.plugin_dir = plugin_dir
         self.filename: str = "edmc-fleet-info-data.json"
-        self.filepath = os.path.join(plugin_dir, self.filename)
         self.label: Optional[HyperlinkLabel] = None
         self.shiplist: Optional[tk.OptionMenu] = None
         self.selectedship: Optional[tk.StringVar] = None
@@ -69,9 +68,13 @@ class FleetInfo():
     # Load in fleet data from file
     def loadshipdata(self) -> None:
         self.shipdata = {"0":{"Name":"Loading...","loadout":None}}
+        filename = self.filename
+        if self.is_beta:
+            filename = "beta-"+filename
+        filepath = os.path.join(self.plugin_dir, filename)
         try:
-            logger.debug(f'Loading ship data from {self.filepath!r}')
-            with open(self.filepath, mode='r', encoding='utf-8') as shipsfile:
+            logger.debug(f'Loading ship data from {filepath!r}')
+            with open(filepath, mode='r', encoding='utf-8') as shipsfile:
                 self.shipdata = json.load(shipsfile)
                 close(shipsfile)
         except Exception as e:
@@ -82,9 +85,13 @@ class FleetInfo():
 
     # Write fleet data out to file, done every time it changes
     def saveshipdata(self) -> None:
+        filename = self.filename
+        if self.is_beta:
+            filename = "beta-"+filename
+        filepath = os.path.join(self.plugin_dir, filename)
         try:
-            logger.trace(f'Saving ship data to {self.filepath!r}')
-            with open(self.filepath, mode='w', encoding='utf-8') as shipsfile:
+            logger.trace(f'Saving ship data to {filepath!r}')
+            with open(filepath, mode='w', encoding='utf-8') as shipsfile:
                 json.dump(self.shipdata, shipsfile, indent=2)
                 close(shipsfile)
         except Exception as e:
